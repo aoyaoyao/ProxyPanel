@@ -1,6 +1,6 @@
 @extends('admin.layouts')
 @section('css')
-    <link href="/assets/global/vendor/bootstrap-table/bootstrap-table.min.css" type="text/css" rel="stylesheet">
+    <link href="/assets/global/vendor/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
 @endsection
 @section('content')
     <div class="page-content container">
@@ -35,12 +35,12 @@
                                 @canany(['admin.permission.edit', 'admin.permission.destroy'])
                                     <div class="btn-group">
                                         @can('admin.permission.edit')
-                                            <a class="btn btn-sm btn-outline-primary" href="{{route('admin.permission.edit', $permission->id)}}">
+                                            <a class="btn btn-sm btn-outline-primary" href="{{route('admin.permission.edit', $permission)}}">
                                                 <i class="icon wb-edit"></i></a>
                                         @endcan
                                         @can('admin.permission.destroy')
                                             <button class="btn btn-sm btn-outline-danger"
-                                                    onclick="delPermission('{{route('admin.permission.destroy', $permission->id)}}','{{$permission->name}}')">
+                                                    onclick="delPermission('{{route('admin.permission.destroy', $permission)}}','{{$permission->name}}')">
                                                 <i class="icon wb-trash"></i></button>
                                         @endcan
                                     </div>
@@ -67,10 +67,10 @@
     </div>
 @endsection
 @section('javascript')
-    <script src="/assets/global/vendor/bootstrap-table/bootstrap-table.min.js" type="text/javascript"></script>
-    <script src="/assets/global/vendor/bootstrap-table/extensions/mobile/bootstrap-table-mobile.min.js" type="text/javascript"></script>
+    <script src="/assets/global/vendor/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/assets/global/vendor/bootstrap-table/extensions/mobile/bootstrap-table-mobile.min.js"></script>
     @can('admin.permission.destroy')
-        <script type="text/javascript">
+        <script>
           function delPermission(url, name) {
             swal.fire({
               title: '警告',

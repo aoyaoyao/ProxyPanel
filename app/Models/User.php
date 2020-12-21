@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * 用户信息.
  */
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, HasRoles;
 
@@ -31,6 +32,33 @@ class User extends Authenticatable
     public function usedTraffic(): int
     {
         return $this->d + $this->u;
+    }
+
+    public function profile()
+    {
+        return [
+            'id' => $this->id,
+            'nickname' => $this->username,
+            'account' => $this->email,
+            'port' => $this->port,
+            'passwd' => $this->passwd,
+            'uuid' => $this->vmess_id,
+            'transfer_enable' => $this->transfer_enable,
+            'u' => $this->u,
+            'd' => $this->d,
+            't' => $this->t,
+            'enable' => $this->enable,
+            'speed_limit' => $this->speed_limit,
+            'credit' => $this->credit,
+            'expired_at' => $this->expired_at,
+            'ban_time' => $this->ban_time,
+            'level' => $this->level_name,
+            'group' => $this->group->name ?? null,
+            'last_login' => $this->last_login,
+            'reset_time' => $this->reset_time,
+            'invite_num' => $this->invite_num,
+            'status' => $this->status,
+        ];
     }
 
     public function onlineIpLogs(): HasMany
@@ -278,5 +306,15 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

@@ -1,7 +1,8 @@
 @extends('user.layouts')
 @section('css')
-    <link href="/assets/global/fonts/font-awesome/font-awesome.min.css" type="text/css" rel="stylesheet">
-    <link href="/assets/global/vendor/aspieprogress/asPieProgress.min.css" type="text/css" rel="stylesheet">
+    <link href="/assets/global/vendor/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
+    <link href="/assets/global/fonts/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/global/vendor/aspieprogress/asPieProgress.min.css" rel="stylesheet">
 @endsection
 @section('content')
     <div class="page-content container-fluid">
@@ -133,9 +134,64 @@
             </div>
             <div class="col-xxl-9 col-xl-8 col-lg-7 col-md-6 col-12">
                 <div class="row" data-plugin="matchHeight" data-by-row="true">
-                    <div class="col-xl-4 col-lg-6 mb-30">
+                    <div class="col-xl-4 mb-30">
                         <div class="card card-shadow h-full">
-                            <div class="card-block text-center p-20">
+                            <div class="card-block text-center">
+                                <h3 class="card-header-transparent"><i class="icon wb-link-intact"></i> 订 阅 链 接 </h3>
+                                @if($subscribe_status)
+                                    <div class="card-body">
+                                        @if(count($subType)>1)
+                                            <div class="form-group row">
+                                                <label class="col-md-auto col-form-label" for="subType">自定义订阅</label>
+                                                <div class="col">
+                                                    <select class="form-control" id="subType" name="subType" data-plugin="selectpicker" data-style="btn-outline btn-primary">
+                                                        <option value="" hidden>全 部</option>
+                                                        @if(in_array('ss',$subType))
+                                                            <option value="1">只订阅SS/SSR</option>
+                                                        @endif
+                                                        @if(in_array('v2',$subType))
+                                                            <option value="2">只订阅V2Ray</option>
+                                                        @endif
+                                                        @if(in_array('trojan',$subType))
+                                                            <option value="3">只订阅Trojan</option>
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <div class="form-group row">
+                                            <label class="col-md-auto col-form-label" for="client">客户端 DIY</label>
+                                            <div class="col">
+                                                <select class="form-control" id="client" name="client" data-plugin="selectpicker" data-style="btn-outline btn-primary">
+                                                    <option value="" hidden>默 认</option>
+                                                    <option value="quantumult">圈 - Quantumult</option>
+                                                    <option value="quantumult x">圈X - QuantumultX</option>
+                                                    <option value="clash">Clash</option>
+                                                    <option value="surfboard">Surfboard</option>
+                                                    <option value="surge">Surge</option>
+                                                    <option value="shadowrocket">小火箭 - Shadowrocket</option>
+                                                    <option value="shadowsocks">SS路由器</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer-transparent btn-group">
+                                        <button class="btn btn-outline-danger" onclick="exchangeSubscribe();">
+                                            <i class="icon wb-refresh" aria-hidden="true"></i>
+                                            {{trans('home.exchange_subscribe')}}</button>
+                                        <button class="btn btn-outline-info mt-clipboard" data-clipboard-action="copy">
+                                            <i class="icon wb-copy" aria-hidden="true"></i>
+                                            {{trans('home.copy_subscribe_address')}}</button>
+                                    </div>
+                                @else
+                                    <x-alert type="danger" :message="trans('home.subscribe_baned')"/>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 mb-30">
+                        <div class="card card-shadow h-full">
+                            <div class="card-block text-center">
                                 <i class="font-size-40 wb-wrench"></i>
                                 <h4 class="card-title">客户端</h4>
                                 <p class="card-text">下载 & 教程 </p>
@@ -143,7 +199,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-6 mb-30">
+                    <div class="col-xl-4 mb-30">
                         <div class="card card-shadow text-center h-full">
                             <div class="card-block">
                                 @if(sysConfig('is_push_bear') && sysConfig('push_bear_qrcode'))
@@ -151,6 +207,16 @@
                                     <div id="qrcode" class="mb-10"></div>
                                 @else
                                     <h4 class="card-title"><i class="wb-bell mr-10 yellow-600"></i>交流群</h4>
+                                @endif
+                                @if($paying_user)
+                                    <div class="btn-group">
+                                        <a class="card-link btn btn-sm btn-pill-left btn-info" href="https://jq.qq.com/?_wv=1027&k=52AI188" target="_blank" rel="noopener">
+                                            <i class="fa fa-qq"></i> QQ群</a>
+                                        <a class="card-link btn btn-sm btn-pill-right btn-success disabled" href="https://t.me/otakucloud" target="_blank" rel="noopener">
+                                            TG群 <i class="fa fa-paper-plane"></i></a>
+                                    </div>
+                                @else
+                                    <p class="card-link btn btn-sm btn-primary"><i class="wb-lock mr-5"></i>购买服务后解锁售后群</p>
                                 @endif
                             </div>
                         </div>
@@ -220,14 +286,17 @@
     </div>
 @endsection
 @section('javascript')
-    <script src="/assets/global/vendor/aspieprogress/jquery-asPieProgress.js" type="text/javascript"></script>
-    <script src="/assets/global/vendor/matchheight/jquery.matchHeight-min.js" type="text/javascript"></script>
-    <script src="/assets/global/vendor/chart-js/Chart.min.js" type="text/javascript"></script>
-    <script src="/assets/global/js/Plugin/aspieprogress.js" type="text/javascript"></script>
-    <script src="/assets/global/js/Plugin/matchheight.js" type="text/javascript"></script>
+    <script src="/assets/custom/clipboardjs/clipboard.min.js"></script>
+    <script src="/assets/global/vendor/aspieprogress/jquery-asPieProgress.min.js"></script>
+    <script src="/assets/global/vendor/matchheight/jquery.matchHeight-min.js"></script>
+    <script src="/assets/global/vendor/chart-js/Chart.min.js"></script>
+    <script src="/assets/global/vendor/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="/assets/global/js/Plugin/aspieprogress.js"></script>
+    <script src="/assets/global/js/Plugin/matchheight.js"></script>
+    <script src="/assets/global/js/Plugin/bootstrap-select.js"></script>
     @if(sysConfig('is_push_bear') && sysConfig('push_bear_qrcode'))
         <script src="/assets/custom/easy.qrcode.min.js"></script>
-        <script type="text/javascript">
+        <script>
           // Options
           const options = {
             text: @json(sysConfig('push_bear_qrcode')),
@@ -241,7 +310,61 @@
           new QRCode(document.getElementById('qrcode'), options);
         </script>
     @endif
-    <script type="text/javascript">
+    <script>
+      // 更换订阅地址
+      function exchangeSubscribe() {
+        swal.fire({
+          title: '警告',
+          text: '更换订阅地址将导致:\n1.旧地址立即失效\n2.连接密码被更改',
+          icon: 'warning',
+          showCancelButton: true,
+          cancelButtonText: '{{trans('home.ticket_close')}}',
+          confirmButtonText: '{{trans('home.ticket_confirm')}}',
+        }).then((result) => {
+          if (result.value) {
+            $.post('{{route('changeSub')}}', {_token: '{{csrf_token()}}'}, function(ret) {
+              if (ret.status === 'success') {
+                swal.fire({title: ret.message, icon: 'success', timer: 1000, showConfirmButton: false}).then(() => window.location.reload());
+              } else {
+                swal.fire({title: ret.message, icon: 'error'}).then(() => window.location.reload());
+              }
+            });
+          }
+        });
+      }
+
+      const clipboard = new ClipboardJS('.mt-clipboard', {
+        text: function(trigger) {
+          let base = @json($subUrl);
+          const client = $('#client').val();
+          const subType = $('#subType').val();
+          if (subType && client) {
+            base += '?target=' + client + '&type=' + subType;
+          } else if (subType) {
+            base += '?type=' + subType;
+          } else if (client) {
+            base += '?target=' + client;
+          }
+          return base;
+        },
+      });
+      clipboard.on('success', function() {
+        swal.fire({
+          title: '复制成功',
+          icon: 'success',
+          timer: 1300,
+          showConfirmButton: false,
+        });
+      });
+      clipboard.on('error', function() {
+        swal.fire({
+          title: '复制失败，请手动复制',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      });
+
       // 签到
       function checkIn() {
         $.post('{{route('checkIn')}}', {_token: '{{csrf_token()}}'}, function(ret) {

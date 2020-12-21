@@ -1,7 +1,7 @@
 @extends('user.layouts')
 @section('css')
-    <link href="/assets/global/fonts/font-awesome/font-awesome.min.css" type="text/css" rel="stylesheet">
-    <link href="/assets/global/fonts/material-design/material-design.min.css" type="text/css" rel="stylesheet">
+    <link href="/assets/global/fonts/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/global/fonts/material-design/material-design.min.css" rel="stylesheet">
     <style type="text/css">
         ol > li {
             margin-bottom: 8px;
@@ -56,9 +56,7 @@
                                                                     </button>
                                                                     <div class="dropdown-menu" aria-labelledby="sublink" role="menu">
                                                                         @if(in_array('ss',$sub))
-                                                                            <button class="dropdown-item" onclick="linkManager('1')" role="menuitem">
-                                                                                只订阅SS/SSR
-                                                                            </button>
+                                                                            <a class="dropdown-item" onclick="linkManager('1')" role="menuitem">只订阅SS/SSR</a>
                                                                         @endif
                                                                         @if(in_array('v2',$sub))
                                                                             <a class="dropdown-item" onclick="linkManager('2')" role="menuitem">只订阅V2Ray</a>
@@ -292,11 +290,11 @@
 
 @endsection
 @section('javascript')
-    <script src="/assets/custom/Plugin/clipboardjs/clipboard.min.js" type="text/javascript"></script>
-    <script src="/assets/global/js/Plugin/responsive-tabs.js" type="text/javascript"></script>
-    <script src="/assets/global/js/Plugin/tabs.js" type="text/javascript"></script>
-    <script src="/assets/custom/jump-tab.js" type="text/javascript"></script>
-    <script type="text/javascript">
+    <script src="/assets/custom/clipboardjs/clipboard.min.js"></script>
+    <script src="/assets/global/js/Plugin/responsive-tabs.js"></script>
+    <script src="/assets/global/js/Plugin/tabs.js"></script>
+    <script src="/assets/custom/jump-tab.js"></script>
+    <script>
       function linkManager($type) {
         $('#sub_link').val('{{$link}}?type=' + $type);
         return false;
